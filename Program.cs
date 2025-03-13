@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Xml.Schema;
 
 namespace Consolacooperativa {
 internal class Program {
@@ -55,15 +56,21 @@ internal class Program {
         }
         if (Directory.Exists(ruta)) { //si halla una ruta
             string[] directorios = Directory.GetDirectories(ruta); //consigue todos los directorios que existen
-            Console.WriteLine("\nDirectorios encontrados:\n");
             foreach (string dir in directorios) { //muestra cada diretorio del arreglo de directorios
                 Console.WriteLine(dir);
             }
+            string[] archivos = Directory.GetFiles(ruta);
+            foreach (string archivo in archivos) {
+                Console.WriteLine(Path.GetFileName(archivo));
+            }
         } else {
-            Console.WriteLine("La ruta especificada no existe.");
+        Console.WriteLine("La ruta especificada no existe.");
         }
     }
     static string cd(string ruta, string arg){
+            if (arg == "..") {
+                return Path.GetFullPath(Path.Combine(ruta, ".."));
+            }
         if (arg != null) {
             string nuevaRuta = Path.Combine(ruta, arg);
             if (Directory.Exists(nuevaRuta)) {
@@ -124,7 +131,7 @@ internal class Program {
         }
     }
     static void time(string arg) {
-        if (arg != null) {
+        if (arg == null) {
             Console.WriteLine(DateTime.Now.ToString("HH:mm:ss"));
         }
     }
@@ -138,12 +145,17 @@ internal class Program {
     static void copy(string ruta, string sourceFile, string destinationPath) {
         string sourceFilePath = Path.Combine(ruta, sourceFile);
         string destinationFullPath = Path.Combine(ruta, destinationPath);
+
         if (Directory.Exists(destinationFullPath)) {//si destinationPath es un directorio, copiar dentro del directorio con el mismo nombre
             destinationFullPath = Path.Combine(destinationFullPath, Path.GetFileName(sourceFile));
         }
+        if (!File.Exists(sourceFilePath)) {
+            File.Create(destinationFullPath).Close(); // Crear archivo vacío
+            return;
+        }
         File.Copy(sourceFilePath, destinationFullPath, true);
         Console.WriteLine($"Archivo copiado de {sourceFile} a {destinationFullPath}");
-    }
+        }
     static void color(string arg) {
         char fondo = char.ToUpper(arg[0]);
         char texto = char.ToUpper(arg[1]);
