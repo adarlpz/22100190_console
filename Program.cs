@@ -208,6 +208,7 @@ internal class Program {
         while (true) {
             Console.Write(ruta + ">"); //ruta donde inicia
             string input = Console.ReadLine(); //input
+            input = input.ToLower();
             string comando = separar(input, 0); //te lee la primera palabra que es el comando
             string argumento1 = separar(input, 1); //te lee la segunda palabra que es el argumento1
             string argumento2 = separar(input, 2); //te lee la tercera palabra que es el arguemento2
